@@ -9,6 +9,9 @@ import numpy as np
 import scipy.optimize as op
 import matplotlib.pyplot as pl
 from matplotlib.ticker import MaxNLocator
+from scipy.optimize import curve_fit
+
+
 np.seterr(divide='ignore', invalid='ignore')
 np.seterr(over='ignore', invalid='ignore')
 
@@ -42,11 +45,13 @@ pl.savefig("line-data.png")
 # X = [A^T C^-1 A]^-1[A^T C^-1 Y]
 #Covariance => [A^T C^-1 A]^-1
 
-A = np.vstack((np.ones_like(x), x)).T
-C = np.diag(yerr * yerr) #covariance
-cov = np.linalg.inv(np.dot(A.T, np.linalg.solve(C, A)))
-T_ls, f_ls = np.dot(cov, np.dot(A.T, np.linalg.solve(C, y)))
+def logPlanck(x,T_ls):
+    return(np.log10((a/x**5)*(1/((np.exp(b/(T_ls/x))-1)))))
 
+popt, pcov = curve_fit(logPlanck,x,y)
+print(popt,"popt",pcov,"pcov",logPlanck(x, *pcov),logPlanck(x, *popt))
+pl.plot(x,logPlanck(x, *pcov), "r-", label='fit')
+pl.show()
 print("""#Least-squares results:
     #T = {0} ± {1}
 """.format(T_ls, np.sqrt(cov[1, 1])))
@@ -54,7 +59,9 @@ print("""#Least-squares results:
 # Plot the least-squares result.
 #print(np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ls))-1)))),xl,"this is it")
 
-pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1)))), "--k")
+
+
+
 pl.tight_layout()
 pl.savefig("line-least-squares.png")
 

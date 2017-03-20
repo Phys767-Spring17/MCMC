@@ -130,7 +130,6 @@ samples[:] = np.exp(samples[:])
 T_mcmc = list(map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
                              zip(*np.percentile(samples, [16, 50, 84],
                                                 axis=0))))
-print(T_mcmc)
 print("""MCMC result:
     T = {0[0]} +{0[1]} -{0[2]}
 """.format(T_mcmc))
