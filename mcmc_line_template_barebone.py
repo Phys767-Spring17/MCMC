@@ -36,7 +36,7 @@ logPlanck = np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1))))
 
 def lnprior(theta):
     T, lnf = theta
-    if 0.0 < T < 2000.0 and -5.0 < lnf < 5.0:
+    if 0.0 < T < 2000.0 and 0 < lnf < 5:
         return 0.0
     return -np.inf
 
@@ -56,6 +56,7 @@ def lnprob(theta, x, y, yerr):
 # Find the maximum likelihood value.
 chi2 = lambda *args: -2 * lnlike(*args)
 result = op.minimize(chi2, [T_ls,0], args=(x, y, yerr))
+print(result)
 T_ml = result["x"]
 print("""#Maximum likelihood result:
     #T = {0}

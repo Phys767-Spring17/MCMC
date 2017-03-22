@@ -17,8 +17,8 @@ errlogf=data[2][:] # Error on log10(flux)
 # Shape parameters for priors
 Teffmin = 10.0
 Teffmax = 1000.0
-logfacmin = -100.0
-logfacmax = 0.0
+logfacmin = -100.0 #log factor minimum
+logfacmax = 0.0 #log factor maximum
 thetashape=np.array([[Teffmin,Teffmax],[logfacmin,logfacmax]])
 
 
@@ -85,7 +85,7 @@ def log_prior(theta,thetashape):
 Teffinitial = np.exp( np.random.uniform(np.log(thetashape[0][0]),np.log(thetashape[0][1])) )
 logfacinitial=np.random.uniform(thetashape[1][0],thetashape[1][1])
 thetachain=np.array([[Teffinitial,logfacinitial]])
-
+print(Teffinitial)
 # Calculate the associated modified loglike
 loglikechain=np.empty([1])
 loglikechain[0]=log_prior(thetachain[0],thetashape) + log_like(lam,logf,errlogf,thetachain[0])
@@ -126,7 +126,6 @@ while True:
 
 # In[52]:
 
-get_ipython().magic('matplotlib inline')
 
 jlist=np.arange(len(thetachain))
 plt.scatter(thetachain[:,0], thetachain[:,1], c=jlist, cmap='coolwarm')
@@ -142,7 +141,6 @@ np.max(loglikechain)
 
 # In[54]:
 
-get_ipython().magic('matplotlib inline')
 
 plt.plot(loglikechain)
 plt.xlabel('Chain number')
@@ -164,7 +162,6 @@ print( 'Burn point = ',burnj)
 
 # In[14]:
 
-get_ipython().magic('matplotlib inline')
 
 jlist=np.arange(len(thetachain))
 plt.scatter(thetachain[burnj:,0], thetachain[burnj:,1], c=jlist[burnj:], cmap='coolwarm',alpha=0.5)
@@ -182,7 +179,6 @@ ascii.write(thetachain[burnj:,:], "chains.dat")
 
 # In[16]:
 
-get_ipython().magic('matplotlib inline')
 
 plt.plot(thetachain[burnj:,0])
 plt.title('Check mixing')
@@ -193,7 +189,6 @@ plt.show()
 
 # In[17]:
 
-get_ipython().magic('matplotlib inline')
 
 plt.plot(thetachain[burnj:,1])
 plt.title('Check mixing')
@@ -204,7 +199,6 @@ plt.show()
 
 # In[49]:
 
-get_ipython().magic('matplotlib inline')
 
 temp=np.empty([len(thetachain)-burnj])
 temp[0]=thetachain[burnj,0]
@@ -219,7 +213,6 @@ plt.show()
 
 # In[50]:
 
-get_ipython().magic('matplotlib inline')
 
 temp=np.empty([len(thetachain)-burnj])
 temp[0]=thetachain[burnj,1]
