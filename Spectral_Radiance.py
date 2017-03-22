@@ -40,9 +40,9 @@ Y1_A = (planck(X*10**-6,3000))
 Y2_A = (planck(X*10**-6,4000))
 Y3_A = (planck(X*10**-6,5000))
 
-T1 = 3000
-T2 = 4000
-T3 = 5000
+T1 = 750
+T2 = 1000
+T3 = 1200
 
 plot1, = pl.plot(X,Y1_A, color="red", label=str(T1)+"K")
 plot2, = pl.plot(X,Y2_A, color="green", label=str(T2)+"K")
@@ -50,8 +50,5 @@ plot3, = pl.plot(X,Y3_A, color="blue", label=str(T3)+"K")
 pl.legend([plot1,plot2,plot3],[str(T1)+"K",str(T2)+"K",str(T3)+"K"])
 pl.xlabel("Wavelength (um)")
 pl.ylabel("Spectral Radiance")
-
-pl.show()
-
 
 pl.show()

@@ -35,20 +35,20 @@ def planck(wav, T):
 
 X = np.linspace(0,25,256,endpoint=True)
 
-T1 = 3000
-T2 = 4000
-T3 = 5000
+T1 = 1500
+T2 = 1750
+T3 = 2000
 
 Y1_B = (np.log10(planck(X*10**-6,T1)))
 Y2_B = (np.log10(planck(X*10**-6,T2)))
 Y3_B = (np.log10(planck(X*10**-6,T3)))
 
-"""
+
 x = np.asarray([3.368,4.618,12.082,22.194,3.6,4.5])
 y = np.asarray([-18.435,-17.042,-15.728,-16.307,-18.063,-17.173])
 yerr = np.asarray([0.087,0.087,0.087,0.087,0.043,0.043])
 
-pl.errorbar(x, y, yerr=yerr, fmt=".k")"""
+pl.errorbar(x, y, yerr=yerr, fmt=".k")
 
 plot1B, = pl.plot(X,Y1_B, color="red", label=str(T1)+"K")
 plot2B, = pl.plot(X,Y2_B, color="green", label=str(T2)+"K")

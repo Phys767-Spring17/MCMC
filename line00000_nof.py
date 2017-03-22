@@ -9,9 +9,6 @@ import numpy as np
 import scipy.optimize as op
 import matplotlib.pyplot as pl
 from matplotlib.ticker import MaxNLocator
-from scipy.optimize import curve_fit
-
-
 np.seterr(divide='ignore', invalid='ignore')
 np.seterr(over='ignore', invalid='ignore')
 
@@ -45,28 +42,31 @@ pl.savefig("line-data.png")
 # X = [A^T C^-1 A]^-1[A^T C^-1 Y]
 #Covariance => [A^T C^-1 A]^-1
 
+A = np.vstack((np.ones_like(x), x)).T
+C = np.diag(yerr * yerr) #covariance
+cov = np.linalg.inv(np.dot(A.T, np.linalg.solve(C, A)))
+T_ls, f_ls = np.dot(cov, np.dot(A.T, np.linalg.solve(C, y)))
+
 print("""#Least-squares results:
-    #T = {0} ± {1}
-""".format(T_ls, np.sqrt(cov[1, 1])))
+    #T = {0} ± {1} (truth: {2})
+""".format(T_ls, np.sqrt(cov[1, 1]), "IDONNOEITHER"))
 
 # Plot the least-squares result.
 #print(np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ls))-1)))),xl,"this is it")
 
-logPlanck = np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1))))
-print(xl,logPlanck,"logplanck")
-pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1)))), "--k")
+pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ls))-1)))), "--k")
 pl.tight_layout()
 pl.savefig("line-least-squares.png")
 
 # Define the probability function as likelihood * prior.
 def lnprior(theta):
-    T, lnf = theta
-    if 0.0 < T < 60000.0 and -10.0 < lnf < 1.0:
+    T= theta
+    if 0.0 < T < 60000.0:
         return 0.0
     return -np.inf
 
 def lnlike(theta, x, y, yerr):
-    T, lnf = theta
+    T= theta
     #print(a,b,x,"here it is")
     model = np.log10((a/x**5)*(1/((np.exp(b/(x*T))-1))))
     inv_sigma2 = 1.0/(yerr**2 + model**2*np.exp(2*lnf))
@@ -80,11 +80,11 @@ def lnprob(theta, x, y, yerr):
 
 # Find the maximum likelihood value.
 chi2 = lambda *args: -2 * lnlike(*args)
-result = op.minimize(chi2, [1,1], args=(x, y, yerr))
+result = op.minimize(chi2, [1000,1], args=(x, y, yerr))
 T_ml = result["x"]
 print("""#Maximum likelihood result:
-    #T = {0}
-""".format(T_ml))
+    #T = {0} (truth: {1})
+""".format(T_ml, "IDONNO"))
 
 # Plot the maximum likelihood result.
 pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ml))-1)))), "k", lw=2)

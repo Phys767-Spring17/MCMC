@@ -10,7 +10,7 @@ import scipy.optimize as op
 import matplotlib.pyplot as pl
 from matplotlib.ticker import MaxNLocator
 from scipy.optimize import curve_fit
-
+import random
 
 np.seterr(divide='ignore', invalid='ignore')
 np.seterr(over='ignore', invalid='ignore')
@@ -44,24 +44,28 @@ pl.savefig("line-data.png")
 # Do the least-squares fit and compute the uncertainties.
 # X = [A^T C^-1 A]^-1[A^T C^-1 Y]
 #Covariance => [A^T C^-1 A]^-1
-
+"""
 print("""#Least-squares results:
     #T = {0} ± {1}
 """.format(T_ls, np.sqrt(cov[1, 1])))
-
+"""
 # Plot the least-squares result.
 #print(np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ls))-1)))),xl,"this is it")
 
+T_ls = random.randrange(0,1500)
+print(T_ls)
+
 logPlanck = np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1))))
-print(xl,logPlanck,"logplanck")
+"""print(xl,logPlanck,"logplanck")
 pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(T_ls/xl))-1)))), "--k")
 pl.tight_layout()
 pl.savefig("line-least-squares.png")
-
+"""
 # Define the probability function as likelihood * prior.
+
 def lnprior(theta):
     T, lnf = theta
-    if 0.0 < T < 60000.0 and -10.0 < lnf < 1.0:
+    if 0.0 < T < 2000.0 and -10.0 < lnf < 1.0:
         return 0.0
     return -np.inf
 
@@ -86,10 +90,12 @@ print("""#Maximum likelihood result:
     #T = {0}
 """.format(T_ml))
 
+
+"""
 # Plot the maximum likelihood result.
 pl.plot(xl, np.log10((a/xl**5)*(1/((np.exp(b/(xl*T_ml))-1)))), "k", lw=2)
 pl.savefig("line-max-likelihood.png")
-
+"""
 
 # Set up the sampler.
 ndim, nwalkers = 2, 100
